@@ -112,9 +112,9 @@ def room_management(rom_col):
     if a==2:
         create_room(rom_col)
     if a==3:
-        delete()
+        delete_room(rom_col)
     if a==4:
-        update()
+        update_room(rom_col)
     if a==5:
         accinfo()
 
@@ -138,9 +138,9 @@ def staff_management(staff_col):
     if a==2:
         create_staff(staff_col)
     if a==3:
-        delete(staff_col)
+        delete_staff(staff_col)
     if a==4:
-        update()
+        update_staff()
     if a==5:
         accinfo()
 
@@ -178,6 +178,7 @@ def create_staff(collection):
     profile["Phnon Number"]=number
 
     collection.insert_one(profile)
+    accinfo()
 
 def create_room(collection):
     from pymongo import MongoClient
@@ -193,12 +194,57 @@ def create_room(collection):
     room_status=str(input("Please Input Room Status: "))
     profile["Room Status"]=room_status
     collection.insert_one(profile)
+    accinfo()
 
-def delete():
-    pass
+def delete_room(room_col):
+    from pymongo import MongoClient
+    room_name=str(input("Please Input the Room Name you wish to delete: "))
+    z=room_col.find_one({"Room Name":room_name})
+    if z==None:
+        print("There is no room with the following name")
+        delete_room(room_col)
+    else:
+        room_col.find_one_and_delete({"Room Name":room_name})
+        print("Room has been successfully deleted")
+        accinfo()
+        
+def delete_staff(staff_col):
+    from pymongo import MongoClient
+    staff_email=str(input("Please Input the Staff's Email you wish to delete"))
+    z=staff_col.find_one({"Email":staff_email})
+    if z==None:
+        print("There is no staff with the following email")
+        delete_room(staff_col)
+    else:
+        staff_col.find_one_and_delete({"Email":staff_email})
+        print("Staff has been successfully Removed")
+        accinfo()
 
-def update():
-    pass
+def update_room(col_room):
+    from pymongo import MongoClient
+    room_name=str(input("Please input the Room Name you would like to update: "))
+    a=col_room.find_one({"Room Name":room_name})
+    if a==None:
+        print("Room Does not exist")
+        update_room(col_room)
+    else:
+        print("Room Found")
+        new_name=str(input("Please input the new room name: "))
+        col_room.find_one_and_update({"Room Name":room_name},{"$set":{"Room Name":new_name}})
+        accinfo() 
+        
+def update_staff(col_staff):
+    from pymongo import MongoClient
+    first_name=str(input("Please input the Staff's First Name you would like to update: "))
+    a=col_staff.find_one()
+    if a==None:
+        print("Staff Does not exist")
+        update_staff(col_staff)
+    else:
+        print("Name Found")
+        new_name=str(input("Please input the new name: "))
+        col_staff.find_one_and_update({"First Name":first_name},{"$set":{"First Name":new_name}})
+        accinfo() 
 
 def available():
     pass
