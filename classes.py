@@ -108,7 +108,7 @@ def room_management(rom_col):
     printer(option)
     a=int(input("Please Choose one of the following: "))
     if a==1:
-        show()
+        show_room(rom_col)
     if a==2:
         create_room(rom_col)
     if a==3:
@@ -132,15 +132,17 @@ def staff_management(staff_col):
             "Update Staff",
             "Back to Account"]
     
+    printer(option)
+    
     a=int(input("Please Choose one of the following: "))
     if a==1:
-        show()
+        show_staff(staff_col)
     if a==2:
         create_staff(staff_col)
     if a==3:
         delete_staff(staff_col)
     if a==4:
-        update_staff()
+        update_staff(staff_col)
     if a==5:
         accinfo()
 
@@ -152,8 +154,15 @@ def cond_c(n,rom_col,book_col,staff_col):
     if n==4:
         staff_management(staff_col)
 
-def show():
-    pass
+def show_room(collection):
+    from pymongo import MongoClient
+    a=list((collection.find()))
+    empty=["ID","Room Name","Room Floor","Bed Numbers","Room Type","Room Status"]
+    print(f"{empty[0]:^12}{empty[1]:^12}{empty[2]:^12}{empty[3]:^12}{empty[4]:^12}{empty[5]:^12}")
+    z=1
+    for i in a:
+        print(f"{z:^12}{i['Room Name']:^12}{i['Room Floor']:^12}{i['Bed Numbers']:^12}{i['Room Type']:^12}{i['Room Status']:^12}")
+        z=z+1
 
 def create_staff(collection):
     from pymongo import MongoClient
@@ -168,7 +177,7 @@ def create_staff(collection):
     profile["Employment Time"]=emp_time
     gender=str(input("Please input gender: "))
     profile["Gender"]=gender
-    age=int(input("Please Input Age"))
+    age=int(input("Please Input Age: "))
     profile["Age"]=age
     address=str(input("Please input address: "))
     profile["Address"]=address
@@ -246,6 +255,17 @@ def update_staff(col_staff):
         col_staff.find_one_and_update({"First Name":first_name},{"$set":{"First Name":new_name}})
         accinfo() 
 
+def show_staff(collection):
+    collection.find()
+    from pymongo import MongoClient
+    a=list((collection.find()))
+    empty=["ID","Room Name","Room Floor","Bed Numbers","Room Type","Room Status"]
+    print(f"{empty[0]:^12}{empty[1]:^12}{empty[2]:^12}{empty[3]:^12}{empty[4]:^12}{empty[5]:^12}")
+    z=1
+    for i in a:
+        print(f"{z:^12}{i['Room Name']:^12}{i['Room Floor']:^12}{i['Bed Numbers']:^12}{i['Room Type']:^12}{i['Room Status']:^12}")
+        z=z+1
+    
 def available():
     pass
 
