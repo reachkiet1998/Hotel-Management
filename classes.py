@@ -138,7 +138,7 @@ def staff_management(staff_col):
     if a==2:
         create_staff(staff_col)
     if a==3:
-        delete()
+        delete(staff_col)
     if a==4:
         update()
     if a==5:
